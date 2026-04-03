@@ -245,4 +245,33 @@ class AppTheme {
       ],
     );
   }
+
+  static BoxDecoration get darkGlassCardDecoration {
+    return BoxDecoration(
+      color: Colors.white.withOpacity(0.08),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: Colors.white.withOpacity(0.1),
+        width: 0.8,
+      ),
+    );
+  }
+
+  static BoxDecoration get darkPanelDecoration {
+    return BoxDecoration(
+      color: Colors.black.withOpacity(0.45),
+      borderRadius: BorderRadius.circular(24),
+      border: Border.all(
+        color: Colors.white.withOpacity(0.1),
+        width: 1,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.35),
+          blurRadius: 30,
+          offset: const Offset(0, 10),
+        ),
+      ],
+    );
+  }
 }

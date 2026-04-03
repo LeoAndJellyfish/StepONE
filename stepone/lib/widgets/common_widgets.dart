@@ -306,3 +306,280 @@ class EmptyState extends StatelessWidget {
     );
   }
 }
+
+class DarkGlassCard extends StatelessWidget {
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
+  final VoidCallback? onTap;
+
+  const DarkGlassCard({
+    super.key,
+    required this.child,
+    this.padding,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: padding ?? const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.1),
+              width: 0.8,
+            ),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+class DarkAchievementCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final String category;
+  final DateTime date;
+  final Color? categoryColor;
+  final VoidCallback? onTap;
+
+  const DarkAchievementCard({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.category,
+    required this.date,
+    this.categoryColor,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.07),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.08),
+              width: 0.8,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.emoji_events_outlined,
+                  size: 20,
+                  color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.8),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white.withOpacity(0.92),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withOpacity(0.5),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      category,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.85),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${date.month}/${date.day}',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.white.withOpacity(0.35),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DarkCategoryCard extends StatelessWidget {
+  final String name;
+  final String icon;
+  final Color color;
+
+  const DarkCategoryCard({
+    super.key,
+    required this.name,
+    required this.icon,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.08),
+          width: 0.8,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              _getIconData(icon),
+              size: 20,
+              color: color.withOpacity(0.85),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            name,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Colors.white.withOpacity(0.85),
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'emoji_events':
+        return Icons.emoji_events;
+      case 'lightbulb':
+        return Icons.lightbulb;
+      case 'work':
+        return Icons.work;
+      case 'article':
+        return Icons.article;
+      case 'workspace_premium':
+        return Icons.workspace_premium;
+      case 'volunteer_activism':
+        return Icons.volunteer_activism;
+      default:
+        return Icons.star;
+    }
+  }
+}
+
+class DarkEmptyState extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+
+  const DarkEmptyState({
+    super.key,
+    required this.title,
+    this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.inbox_outlined,
+              size: 36,
+              color: Colors.white.withOpacity(0.3),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.white.withOpacity(0.5),
+              ),
+            ),
+            if (subtitle != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                subtitle!,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white.withOpacity(0.35),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}

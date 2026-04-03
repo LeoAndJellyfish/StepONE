@@ -2,7 +2,7 @@ name: stepone_app
 description: "StepONE - 成就管理平台，帮助用户管理成就并生成简历"
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.0
 
 environment:
   sdk: ^3.11.0
@@ -59,3 +59,9 @@ flutter:
           weight: 500
         - asset: assets/fonts/HarmonyOS_Sans_SC_Bold.ttf
           weight: 700
+
+# Hooks 配置 - 使用系统 SQLite 避免从 GitHub 下载
+hooks:
+  user_defines:
+    sqlite3:
+      source: system

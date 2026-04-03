@@ -74,6 +74,19 @@ def update_pubspec_version(project_root, version):
     return True
 
 
+def update_website_version(project_root, version):
+    """更新 website/App.tsx 版本号"""
+    app_tsx_path = project_root.parent / "website" / "App.tsx"
+    if not app_tsx_path.exists():
+        print("[警告] 未找到 website/App.tsx 文件，跳过网站版本更新")
+        return True
+
+    content = app_tsx_path.read_text(encoding="utf-8")
+    content = re.sub(r"(>v)\d+\.\d+\.\d+", f"\\g<1>{version}", content)
+    app_tsx_path.write_text(content, encoding="utf-8")
+    return True
+
+
 def get_platforms_to_build():
     """根据当前系统确定默认构建平台"""
     system = sys_platform.system()
@@ -221,6 +234,12 @@ def main():
         input("\n按回车键退出...")
         sys.exit(1)
     print("      版本号已更新")
+
+    print_step(1, 3, "更新 website/App.tsx 版本号")
+    if not update_website_version(project_root, version):
+        input("\n按回车键退出...")
+        sys.exit(1)
+    print("      网站版本号已更新")
     print()
 
     # 步骤 2: 清理构建缓存

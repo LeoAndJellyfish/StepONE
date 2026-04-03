@@ -18,16 +18,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final AchievementDao _achievementDao = AchievementDao();
   final CategoryDao _categoryDao = CategoryDao();
+  final TextEditingController _searchController = TextEditingController();
 
   List<Achievement> _recentAchievements = [];
+  List<Achievement> _allAchievements = [];
   List<Category> _categories = [];
   int _totalAchievements = 0;
   bool _isLoading = true;
+  
+  String _activeFilter = '全部';
+  int? _selectedCategoryId;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -38,11 +49,133 @@ class _HomePageState extends State<HomePage> {
     final total = await _achievementDao.getCount();
 
     setState(() {
-      _recentAchievements = achievements.take(5).toList();
+      _allAchievements = achievements;
+      _recentAchievements = _applyFilter(achievements);
       _categories = categories;
       _totalAchievements = total;
       _isLoading = false;
     });
+  }
+
+  List<Achievement> _applyFilter(List<Achievement> achievements) {
+    var filtered = achievements;
+
+    if (_searchController.text.isNotEmpty) {
+      final query = _searchController.text.toLowerCase();
+      filtered = filtered.where((a) {
+        return a.title.toLowerCase().contains(query) ||
+               a.description.toLowerCase().contains(query);
+      }).toList();
+    }
+
+    if (_activeFilter == '最近') {
+      filtered = filtered.take(10).toList();
+    } else if (_activeFilter == '分类' && _selectedCategoryId != null) {
+      filtered = filtered.where((a) => a.categoryId == _selectedCategoryId).toList();
+    }
+
+    return filtered;
+  }
+
+  void _onFilterChanged(String filter) {
+    setState(() {
+      _activeFilter = filter;
+      if (filter != '分类') {
+        _selectedCategoryId = null;
+      }
+      _recentAchievements = _applyFilter(_allAchievements);
+    });
+  }
+
+  void _onCategorySelected(int? categoryId) {
+    setState(() {
+      _selectedCategoryId = categoryId;
+      _activeFilter = '分类';
+      _recentAchievements = _applyFilter(_allAchievements);
+    });
+  }
+
+  Future<void> _navigateToAddAchievement() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const AchievementFormPage(),
+      ),
+    );
+    _loadData();
+  }
+
+  Future<void> _navigateToEditAchievement(Achievement achievement) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AchievementFormPage(
+          achievement: achievement,
+        ),
+      ),
+    );
+    _loadData();
+  }
+
+  Future<void> _showCategoryFilterDialog() async {
+    if (_categories.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('还没有分类，请先创建分类'),
+          backgroundColor: Colors.transparent,
+        ),
+      );
+      return;
+    }
+
+    final selectedCategory = await showDialog<Category>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('选择分类'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _categories.length,
+            itemBuilder: (context, index) {
+              final category = _categories[index];
+              return ListTile(
+                leading: Icon(
+                  _getIconData(category.icon),
+                  color: _parseColor(category.color),
+                ),
+                title: Text(category.name),
+                onTap: () => Navigator.pop(context, category),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    if (selectedCategory != null) {
+      _onCategorySelected(selectedCategory!.id);
+    }
+  }
+
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'emoji_events':
+        return Icons.emoji_events;
+      case 'lightbulb':
+        return Icons.lightbulb;
+      case 'work':
+        return Icons.work;
+      case 'article':
+        return Icons.article;
+      case 'workspace_premium':
+        return Icons.workspace_premium;
+      case 'volunteer_activism':
+        return Icons.volunteer_activism;
+      default:
+        return Icons.star;
+    }
   }
 
   @override
@@ -237,24 +370,33 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.fromLTRB(20, 16, 12, 12),
       child: Row(
         children: [
-          Icon(Icons.search_rounded, size: 20, color: Colors.white.withOpacity(0.6)),
+          GestureDetector(
+            onTap: () => _showSearchDialog(),
+            child: Icon(Icons.search_rounded, size: 20, color: Colors.white.withOpacity(0.6)),
+          ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              '搜索成就...',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.white.withOpacity(0.45),
-                fontWeight: FontWeight.w400,
+            child: GestureDetector(
+              onTap: () => _showSearchDialog(),
+              child: Text(
+                _searchController.text.isEmpty ? '搜索成就...' : _searchController.text,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: _searchController.text.isEmpty 
+                      ? Colors.white.withOpacity(0.45) 
+                      : Colors.white.withOpacity(0.9),
+                  fontWeight: FontWeight.w400,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
-          _buildChip('全部', true),
-          _buildChip('分类', false),
-          _buildChip('最近', false),
+          _buildChip('全部', _activeFilter == '全部'),
+          _buildChip('分类', _activeFilter == '分类'),
+          _buildChip('最近', _activeFilter == '最近'),
           IconButton(
             icon: Icon(Icons.add_rounded, size: 20, color: Colors.white.withOpacity(0.5)),
-            onPressed: () {},
+            onPressed: _navigateToAddAchievement,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           ),
@@ -263,41 +405,95 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> _showSearchDialog() async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        content: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: '搜索成就...',
+            prefixIcon: const Icon(Icons.search),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            suffixIcon: _searchController.text.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {});
+                    },
+                  )
+                : null,
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'cancel'),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, 'search'),
+            child: const Text('搜索'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == 'search') {
+      setState(() {
+        _recentAchievements = _applyFilter(_allAchievements);
+      });
+    }
+  }
+
   Widget _buildChip(String label, bool isActive) {
     return Padding(
       padding: const EdgeInsets.only(right: 6),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-        decoration: BoxDecoration(
-          color: isActive ? Colors.white.withOpacity(0.18) : Colors.transparent,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isActive ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.08),
-            width: 1,
+      child: GestureDetector(
+        onTap: () {
+          if (label == '分类' && isActive) {
+            _showCategoryFilterDialog();
+          } else {
+            _onFilterChanged(label);
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          decoration: BoxDecoration(
+            color: isActive ? Colors.white.withOpacity(0.18) : Colors.transparent,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: isActive ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.08),
+              width: 1,
+            ),
           ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isActive)
-              Container(
-                width: 6,
-                height: 6,
-                margin: const EdgeInsets.only(right: 6),
-                decoration: BoxDecoration(
-                  color: _getChipColor(label),
-                  shape: BoxShape.circle,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (isActive)
+                Container(
+                  width: 6,
+                  height: 6,
+                  margin: const EdgeInsets.only(right: 6),
+                  decoration: BoxDecoration(
+                    color: _getChipColor(label),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: isActive ? Colors.white.withOpacity(0.9) : Colors.white.withOpacity(0.5),
+                  fontWeight: isActive ? FontWeight.w500 : FontWeight.w400,
                 ),
               ),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                color: isActive ? Colors.white.withOpacity(0.9) : Colors.white.withOpacity(0.5),
-                fontWeight: isActive ? FontWeight.w500 : FontWeight.w400,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -351,7 +547,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         Divider(height: 1, thickness: 0.5, color: Colors.white.withOpacity(0.08)),
         _buildStatsRow(),
-        _buildCategoriesRow(),
+        if (_activeFilter == '分类') _buildCategoriesRow(),
         _buildRecentList(),
       ],
     );
@@ -430,6 +626,7 @@ class _HomePageState extends State<HomePage> {
         itemCount: _categories.length,
         itemBuilder: (context, index) {
           final category = _categories[index];
+          final isSelected = _selectedCategoryId == category.id;
           return Padding(
             padding: const EdgeInsets.only(right: 10),
             child: SizedBox(
@@ -438,6 +635,8 @@ class _HomePageState extends State<HomePage> {
                 name: category.name,
                 icon: category.icon,
                 color: _parseColor(category.color),
+                isSelected: isSelected,
+                onTap: () => _onCategorySelected(category.id!),
               ),
             ),
           );
@@ -451,8 +650,19 @@ class _HomePageState extends State<HomePage> {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: DarkEmptyState(
-          title: '还没有成就',
-          subtitle: '点击右下角按钮添加你的第一个成就',
+          title: _searchController.text.isNotEmpty ? '没有找到匹配的成就' : '还没有成就',
+          subtitle: _searchController.text.isNotEmpty 
+              ? '尝试其他搜索条件或清除搜索' 
+              : '点击右下角按钮添加你的第一个成就',
+          action: _searchController.text.isNotEmpty
+              ? TextButton(
+                  onPressed: () {
+                    _searchController.clear();
+                    _onFilterChanged('全部');
+                  },
+                  child: const Text('清除搜索'),
+                )
+              : null,
         ),
       );
     }
@@ -471,17 +681,7 @@ class _HomePageState extends State<HomePage> {
             category: _getCategoryName(achievement.categoryId),
             date: achievement.achievementDate,
             categoryColor: _getCategoryColor(achievement.categoryId),
-            onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AchievementFormPage(
-                    achievement: achievement,
-                  ),
-                ),
-              );
-              _loadData();
-            },
+            onTap: () => _navigateToEditAchievement(achievement),
           ),
         );
       },

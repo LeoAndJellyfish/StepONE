@@ -461,55 +461,82 @@ class DarkCategoryCard extends StatelessWidget {
   final String name;
   final String icon;
   final Color color;
+  final bool isSelected;
+  final VoidCallback? onTap;
 
   const DarkCategoryCard({
     super.key,
     required this.name,
     required this.icon,
     required this.color,
+    this.isSelected = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.06),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.08),
-          width: 0.8,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isSelected ? color.withOpacity(0.2) : Colors.white.withOpacity(0.06),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? color.withOpacity(0.6) : Colors.white.withOpacity(0.08),
+            width: isSelected ? 1.5 : 0.8,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: color.withOpacity(0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: isSelected ? color.withOpacity(0.3) : color.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                _getIconData(icon),
+                size: isSelected ? 24 : 20,
+                color: isSelected ? Colors.white : color.withOpacity(0.85),
+              ),
             ),
-            child: Icon(
-              _getIconData(icon),
-              size: 20,
-              color: color.withOpacity(0.85),
+            const SizedBox(height: 8),
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                color: isSelected ? Colors.white : Colors.white.withOpacity(0.85),
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Colors.white.withOpacity(0.85),
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+            if (isSelected) ...[
+              const SizedBox(height: 4),
+              Container(
+                width: 20,
+                height: 3,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -537,11 +564,13 @@ class DarkCategoryCard extends StatelessWidget {
 class DarkEmptyState extends StatelessWidget {
   final String title;
   final String? subtitle;
+  final Widget? action;
 
   const DarkEmptyState({
     super.key,
     required this.title,
     this.subtitle,
+    this.action,
   });
 
   @override
@@ -576,6 +605,10 @@ class DarkEmptyState extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
+            ],
+            if (action != null) ...[
+              const SizedBox(height: 16),
+              action!,
             ],
           ],
         ),

@@ -543,44 +543,38 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
     int? maxLines,
     String? Function(String?)? validator,
   }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: TextFormField(
-          controller: controller,
-          maxLines: maxLines ?? 1,
-          validator: validator,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            labelText: label,
-            hintText: hint,
-            labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.25)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.white, width: 1.5),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 1),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 1.5),
-            ),
-            filled: true,
-            fillColor: Colors.white.withOpacity(0.12),
-          ),
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines ?? 1,
+      validator: validator,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.25)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.white, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 1),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        ),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.12),
       ),
     );
   }
@@ -631,30 +625,24 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: InkWell(
-              onTap: _showTagSelector,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withOpacity(0.3)),
+        InkWell(
+          onTap: _showTagSelector,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white.withOpacity(0.3)),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  '标签',
+                  style: TextStyle(color: Colors.white.withOpacity(0.7)),
                 ),
-                child: Row(
-                  children: [
-                    Text(
-                      '标签',
-                      style: TextStyle(color: Colors.white.withOpacity(0.7)),
-                    ),
-                    const Spacer(),
-                    const Icon(Icons.add_circle_outline, color: Colors.white70, size: 20),
-                  ],
-                ),
-              ),
+                const Spacer(),
+                const Icon(Icons.add_circle_outline, color: Colors.white70, size: 20),
+              ],
             ),
           ),
         ),
@@ -664,25 +652,19 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
             spacing: 8,
             runSpacing: 8,
             children: _selectedTags.map((tag) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                  child: Chip(
-                    label: Text(tag.name, style: const TextStyle(color: Colors.white, fontSize: 12)),
-                    backgroundColor: Colors.white.withOpacity(0.2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(color: Colors.white.withOpacity(0.3)),
-                    ),
-                    onDeleted: () {
-                      setState(() {
-                        _selectedTags.remove(tag);
-                      });
-                    },
-                    deleteIconColor: Colors.white70,
-                  ),
+              return Chip(
+                label: Text(tag.name, style: const TextStyle(color: Colors.white, fontSize: 12)),
+                backgroundColor: Colors.white.withOpacity(0.2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: BorderSide(color: Colors.white.withOpacity(0.3)),
                 ),
+                onDeleted: () {
+                  setState(() {
+                    _selectedTags.remove(tag);
+                  });
+                },
+                deleteIconColor: Colors.white70,
               );
             }).toList(),
           ),

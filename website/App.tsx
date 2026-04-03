@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useInView, useSpring } from "framer-mo
 import {
   Github, Globe, Moon, Sun, ChevronDown,
   Trophy, Tags, FileText, Paperclip, Smartphone, Shield,
-  Download, ExternalLink, Star, Heart, ArrowRight
+  Download, ExternalLink, Heart, ArrowRight
 } from "lucide-react";
 import { FEATURES_DATA, TECH_STACK, NAVIGATION_ITEMS } from "./constants";
 import { ContentType } from "./types";
@@ -151,9 +151,9 @@ const App: React.FC = () => {
               initial={{ scale: 0, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
-              className="w-28 h-28 md:w-36 md:h-36 rounded-3xl overflow-hidden shadow-2xl ring-4 ring-white/50 dark:ring-white/20 mx-auto mb-8 bg-white/80 dark:bg-white/10 backdrop-blur-xl flex items-center justify-center"
+              className="w-28 h-28 md:w-36 md:h-36 rounded-[22px] overflow-hidden shadow-2xl ring-4 ring-white/50 dark:ring-white/20 mx-auto mb-8"
             >
-              <Star size={56} className="md:w-16 md:h-16 text-gray-400 dark:text-gray-300" strokeWidth={1.5} />
+              <img src="/zzSQs.jpg" alt="StepONE" className="w-full h-full object-cover" />
             </motion.div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-gray-900 dark:text-white mb-4">
@@ -205,8 +205,8 @@ const App: React.FC = () => {
 const HeroContent: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full text-center space-y-3 md:space-y-6 p-4 md:p-10">
-      <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-xl flex items-center justify-center shadow-lg">
-        <Star size={28} className="md:w-10 md:h-10 text-gray-400 dark:text-gray-300" strokeWidth={1.5} />
+      <div className="w-14 h-14 md:w-20 md:h-20 rounded-[14px] md:rounded-[18px] overflow-hidden shadow-lg">
+        <img src="/zzSQs.jpg" alt="StepONE" className="w-full h-full object-cover" />
       </div>
       <div className="text-center">
         <h1 className="text-2xl md:text-4xl lg:text-5xl font-light tracking-tight text-gray-900 dark:text-white mb-1 md:mb-2">

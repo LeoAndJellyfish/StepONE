@@ -45,11 +45,8 @@ class DatabaseHelper {
         title TEXT NOT NULL,
         description TEXT,
         category_id INTEGER NOT NULL,
-        achievement_type TEXT NOT NULL DEFAULT 'award',
         achievement_date INTEGER NOT NULL,
-        award_level TEXT,
         organization TEXT,
-        certificate_number TEXT,
         is_collective INTEGER DEFAULT 0,
         is_leader INTEGER DEFAULT 0,
         participant_count INTEGER,
@@ -101,7 +98,6 @@ class DatabaseHelper {
     await db.execute('CREATE INDEX idx_file_attachments_achievement_id ON file_attachments(achievement_id)');
 
     await _insertDefaultCategories(db);
-    await _insertDefaultTags(db);
   }
 
   Future<void> _insertDefaultCategories(Database db) async {
@@ -160,25 +156,6 @@ class DatabaseHelper {
 
     for (final category in defaultCategories) {
       await db.insert('categories', category);
-    }
-  }
-
-  Future<void> _insertDefaultTags(Database db) async {
-    final now = DateTime.now().millisecondsSinceEpoch;
-
-    final defaultTags = [
-      {'name': '国家级', 'code': 'NATIONAL', 'description': '国家级别', 'created_at': now},
-      {'name': '省级', 'code': 'PROVINCIAL', 'description': '省份级别', 'created_at': now},
-      {'name': '市级', 'code': 'CITY', 'description': '城市级别', 'created_at': now},
-      {'name': '校级', 'code': 'SCHOOL', 'description': '学校级别', 'created_at': now},
-      {'name': '一等奖', 'code': 'FIRST_PRIZE', 'description': '一等奖项', 'created_at': now},
-      {'name': '二等奖', 'code': 'SECOND_PRIZE', 'description': '二等奖项', 'created_at': now},
-      {'name': '三等奖', 'code': 'THIRD_PRIZE', 'description': '三等奖项', 'created_at': now},
-      {'name': '优秀', 'code': 'EXCELLENT', 'description': '优秀等级', 'created_at': now},
-    ];
-
-    for (final tag in defaultTags) {
-      await db.insert('tags', tag);
     }
   }
 }

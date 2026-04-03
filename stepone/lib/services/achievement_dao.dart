@@ -43,17 +43,6 @@ class AchievementDao {
     return List.generate(maps.length, (i) => Achievement.fromMap(maps[i]));
   }
 
-  Future<List<Achievement>> getByType(String achievementType) async {
-    final db = await _dbHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'achievements',
-      where: 'achievement_type = ?',
-      whereArgs: [achievementType],
-      orderBy: 'achievement_date DESC',
-    );
-    return List.generate(maps.length, (i) => Achievement.fromMap(maps[i]));
-  }
-
   Future<List<Achievement>> search(String keyword) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -97,17 +86,5 @@ class AchievementDao {
       [categoryId],
     );
     return Sqflite.firstIntValue(result) ?? 0;
-  }
-
-  Future<Map<String, int>> getCountByType() async {
-    final db = await _dbHelper.database;
-    final result = await db.rawQuery(
-      'SELECT achievement_type, COUNT(*) as count FROM achievements GROUP BY achievement_type',
-    );
-    final Map<String, int> countMap = {};
-    for (final row in result) {
-      countMap[row['achievement_type'] as String] = row['count'] as int;
-    }
-    return countMap;
   }
 }

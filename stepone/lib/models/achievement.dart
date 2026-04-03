@@ -3,11 +3,8 @@ class Achievement {
   final String title;
   final String description;
   final int categoryId;
-  final String achievementType;
   final DateTime achievementDate;
-  final String? awardLevel;
   final String? organization;
-  final String? certificateNumber;
   final bool isCollective;
   final bool isLeader;
   final int? participantCount;
@@ -22,11 +19,8 @@ class Achievement {
     required this.title,
     required this.description,
     required this.categoryId,
-    required this.achievementType,
     required this.achievementDate,
-    this.awardLevel,
     this.organization,
-    this.certificateNumber,
     this.isCollective = false,
     this.isLeader = false,
     this.participantCount,
@@ -43,11 +37,8 @@ class Achievement {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       categoryId: map['category_id']?.toInt() ?? 0,
-      achievementType: map['achievement_type'] ?? 'award',
       achievementDate: DateTime.fromMillisecondsSinceEpoch(map['achievement_date']),
-      awardLevel: map['award_level'],
       organization: map['organization'],
-      certificateNumber: map['certificate_number'],
       isCollective: (map['is_collective'] ?? 0) == 1,
       isLeader: (map['is_leader'] ?? 0) == 1,
       participantCount: map['participant_count']?.toInt(),
@@ -65,11 +56,8 @@ class Achievement {
       'title': title,
       'description': description,
       'category_id': categoryId,
-      'achievement_type': achievementType,
       'achievement_date': achievementDate.millisecondsSinceEpoch,
-      'award_level': awardLevel,
       'organization': organization,
-      'certificate_number': certificateNumber,
       'is_collective': isCollective ? 1 : 0,
       'is_leader': isLeader ? 1 : 0,
       'participant_count': participantCount,
@@ -86,11 +74,8 @@ class Achievement {
     String? title,
     String? description,
     int? categoryId,
-    String? achievementType,
     DateTime? achievementDate,
-    String? awardLevel,
     String? organization,
-    String? certificateNumber,
     bool? isCollective,
     bool? isLeader,
     int? participantCount,
@@ -105,11 +90,8 @@ class Achievement {
       title: title ?? this.title,
       description: description ?? this.description,
       categoryId: categoryId ?? this.categoryId,
-      achievementType: achievementType ?? this.achievementType,
       achievementDate: achievementDate ?? this.achievementDate,
-      awardLevel: awardLevel ?? this.awardLevel,
       organization: organization ?? this.organization,
-      certificateNumber: certificateNumber ?? this.certificateNumber,
       isCollective: isCollective ?? this.isCollective,
       isLeader: isLeader ?? this.isLeader,
       participantCount: participantCount ?? this.participantCount,
@@ -123,7 +105,7 @@ class Achievement {
 
   @override
   String toString() {
-    return 'Achievement(id: $id, title: $title, type: $achievementType, date: $achievementDate)';
+    return 'Achievement(id: $id, title: $title, date: $achievementDate)';
   }
 
   @override

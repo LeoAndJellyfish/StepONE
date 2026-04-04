@@ -6,7 +6,7 @@
 StepONE 是一个现代化的成就管理平台，致力于为用户提供一个管理成就（获奖、专利、项目……）的平台，帮助用户更好地组织和展示自己的成就，并生成专业的简历或求职信。
 
 ![Platform](https://img.shields.io/badge/platform-Flutter-blue)
-[![Version](https://img.shields.io/badge/version-1.0.2-green)](https://github.com/LeoAndJellyfish/StepONE/releases/latest)
+[![Version](https://img.shields.io/badge/version-1.0.3-green)](https://github.com/LeoAndJellyfish/StepONE/releases/latest)
 [![License](https://img.shields.io/badge/license-Custom%20License-red)](https://github.com/LeoAndJellyfish/StepONE/blob/main/LICENCE)
 [![Release](https://github.com/LeoAndJellyfish/StepONE/actions/workflows/release.yml/badge.svg)](https://github.com/LeoAndJellyfish/StepONE/actions/workflows/release.yml)
 

@@ -1,0 +1,163 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  FLUTTER_VERSION: '3.41.6'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup -y
+
+      - name: Get dependencies
+        working-directory: stepone
+        run: flutter pub get
+        env:
+          FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
+          PUB_HOSTED_URL: https://pub.flutter-io.cn
+
+      - name: Build Windows
+        working-directory: stepone
+        run: flutter build windows --release
+        env:
+          FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
+          PUB_HOSTED_URL: https://pub.flutter-io.cn
+
+      - name: Package Windows
+        working-directory: stepone
+        run: python scripts/package.py ${{ github.ref_name }} --platforms=windows,installer
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: |
+            stepone/releases/${{ github.ref_name }}/*.zip
+            stepone/releases/${{ github.ref_name }}/*.exe
+          retention-days: 1
+
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Get dependencies
+        working-directory: stepone
+        run: flutter pub get
+        env:
+          FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
+          PUB_HOSTED_URL: https://pub.flutter-io.cn
+
+      - name: Build Android APK
+        working-directory: stepone
+        run: flutter build apk --release
+        env:
+          FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
+          PUB_HOSTED_URL: https://pub.flutter-io.cn
+
+      - name: Package Android
+        working-directory: stepone
+        run: python scripts/package.py ${{ github.ref_name }} --platforms=android
+
+      - name: Upload Android artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: stepone/releases/${{ github.ref_name }}/*.apk
+          retention-days: 1
+
+  create-release:
+    needs: [build-windows, build-android]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-build
+          path: artifacts/windows
+
+      - name: Download Android artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: android-build
+          path: artifacts/android
+
+      - name: List artifacts
+        run: |
+          echo "Windows artifacts:"
+          ls -la artifacts/windows/ || echo "No Windows artifacts"
+          echo ""
+          echo "Android artifacts:"
+          ls -la artifacts/android/ || echo "No Android artifacts"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## StepONE ${{ github.ref_name }}
+            
+            ### 下载
+            
+            | 平台 | 文件 |
+            | --- | --- |
+            | Windows 安装版 | 见下方 `*_windows_installer.exe` |
+            | Windows 便携版 | 见下方 `*_windows_portable.zip` |
+            | Android | 见下方 `*_android.apk` |
+            
+            ### 更新日志
+            
+            请查看 [commits](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) 了解详细更改。
+          files: |
+            artifacts/windows/*
+            artifacts/android/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

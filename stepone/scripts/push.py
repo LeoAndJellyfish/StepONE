@@ -9,9 +9,10 @@ StepONE 版本发布脚本
 1. 验证版本号格式
 2. 更新 pubspec.yaml 版本号
 3. 更新 website/App.tsx 版本号
-4. 创建 git commit
-5. 创建 git tag
-6. 推送到远程仓库
+4. 更新 README.md 版本号徽章
+5. 创建 git commit
+6. 创建 git tag
+7. 推送到远程仓库
 """
 
 import sys
@@ -83,6 +84,28 @@ def update_website_version(project_root, version):
     return True
 
 
+def update_readme_version(project_root, version):
+    """更新 README.md 版本号徽章"""
+    readme_path = project_root.parent / "README.md"
+    if not readme_path.exists():
+        print("[警告] 未找到 README.md 文件，跳过版本更新")
+        return True
+
+    content = readme_path.read_text(encoding="utf-8")
+    new_content = re.sub(
+        r"(badge/version-)\d+\.\d+\.\d+(-green)",
+        f"\\g<1>{version}\\g<2>",
+        content
+    )
+    
+    if new_content == content:
+        print("[警告] README 版本号未发生变化")
+        return True
+    
+    readme_path.write_text(new_content, encoding="utf-8")
+    return True
+
+
 def check_git_status(project_root):
     """检查 git 状态"""
     result = run_command("git status --porcelain", cwd=project_root)
@@ -146,26 +169,36 @@ def main():
         if len(changed_files) > 5:
             print(f"       ... 还有 {len(changed_files) - 5} 个文件")
         print()
-        response = input("是否继续？(y/N): ").strip().lower()
+        response = input("是否继续？(y/n): ")
         if response != 'y':
             print("[取消] 操作已取消")
             sys.exit(1)
 
-    print_step(1, 5, "更新 pubspec.yaml 版本号")
+    print_step(1, 6, "更新 pubspec.yaml 版本号")
     if not update_pubspec_version(project_root, version):
         sys.exit(1)
     print("      完成")
 
-    print_step(2, 5, "更新 website/App.tsx 版本号")
+    print_step(2, 6, "更新 website/App.tsx 版本号")
     if not update_website_version(project_root, version):
         sys.exit(1)
     print("      完成")
 
-    print_step(3, 5, "创建 git commit")
-    result = run_command(f'git add pubspec.yaml', cwd=project_root)
+    print_step(3, 6, "更新 README.md 版本号徽章")
+    if not update_readme_version(project_root, version):
+        sys.exit(1)
+    print("      完成")
+
+    print_step(4, 6, "创建 git commit")
+    run_command('git add pubspec.yaml', cwd=project_root)
+    
     website_path = project_root.parent / "website" / "App.tsx"
     if website_path.exists():
         run_command('git add ../website/App.tsx', cwd=project_root)
+    
+    readme_path = project_root.parent / "README.md"
+    if readme_path.exists():
+        run_command('git add ../README.md', cwd=project_root)
     
     result = run_command(f'git commit -m "chore: release {tag}"', cwd=project_root)
     if result.returncode != 0:
@@ -177,14 +210,14 @@ def main():
     else:
         print("      完成")
 
-    print_step(4, 5, f"创建标签 {tag}")
+    print_step(5, 6, f"创建标签 {tag}")
     result = run_command(f'git tag -a {tag} -m "Release {tag}"', cwd=project_root)
     if result.returncode != 0:
         print(f"[错误] 创建标签失败: {result.stderr}")
         sys.exit(1)
     print("      完成")
 
-    print_step(5, 5, "推送到远程仓库")
+    print_step(6, 6, "推送到远程仓库")
     print("      推送 commit...")
     result = run_command('git push', cwd=project_root)
     if result.returncode != 0:

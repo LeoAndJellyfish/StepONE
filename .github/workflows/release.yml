@@ -34,16 +34,10 @@ jobs:
       - name: Get dependencies
         working-directory: stepone
         run: flutter pub get
-        env:
-          FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
-          PUB_HOSTED_URL: https://pub.flutter-io.cn
 
       - name: Build Windows
         working-directory: stepone
         run: flutter build windows --release
-        env:
-          FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
-          PUB_HOSTED_URL: https://pub.flutter-io.cn
 
       - name: Package Windows
         working-directory: stepone
@@ -85,16 +79,10 @@ jobs:
       - name: Get dependencies
         working-directory: stepone
         run: flutter pub get
-        env:
-          FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
-          PUB_HOSTED_URL: https://pub.flutter-io.cn
 
       - name: Build Android APK
         working-directory: stepone
         run: flutter build apk --release
-        env:
-          FLUTTER_STORAGE_BASE_URL: https://storage.flutter-io.cn
-          PUB_HOSTED_URL: https://pub.flutter-io.cn
 
       - name: Package Android
         working-directory: stepone

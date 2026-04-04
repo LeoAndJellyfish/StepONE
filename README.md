@@ -103,8 +103,8 @@ StepONE 是一个现代化的成就管理平台，致力于为用户提供一个
 
 <div align="center">
 
-**Made with ❤️ by StepONE Team**
+**Made with passion by StepONE Team**
 
-⭐ 如果这个项目对你有帮助，请给一个 Star 支持！
+**Dare Greatly**
 
 </div>

@@ -385,7 +385,7 @@ const DownloadSection = React.forwardRef<HTMLElement>((_, ref) => {
           </motion.a>
 
           <motion.a
-            href="https://github.com/LeoAndJellyfish/StepONE/releases"
+            href="https://github.com/LeoAndJellyfish/StepONE/releases/latest"
             target="_blank"
             rel="noreferrer"
             initial={{ opacity: 0, y: 30 }}

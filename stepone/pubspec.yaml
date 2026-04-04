@@ -39,6 +39,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
@@ -65,3 +66,24 @@ hooks:
   user_defines:
     sqlite3:
       source: system
+
+# 应用图标配置
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/images/ooNEe.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/ooNEe.png"
+  min_sdk_android: 21
+  windows:
+    generate: true
+    image_path: "assets/images/ooNEe.png"
+    icon_size: 48
+  macos:
+    generate: true
+    image_path: "assets/images/ooNEe.png"
+  web:
+    generate: true
+    image_path: "assets/images/ooNEe.png"
+    background_color: "#ffffff"
+    theme_color: "#4A90E2"

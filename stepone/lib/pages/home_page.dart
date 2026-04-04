@@ -253,29 +253,6 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.9),
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
-                  child: Image.asset(
-                    'assets/images/zzSQs.jpg',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
               Text(
                 'StepONE',
                 style: TextStyle(

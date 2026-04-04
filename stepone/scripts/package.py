@@ -48,9 +48,16 @@ def print_section(title):
 
 
 def validate_version(version):
-    """验证版本号格式"""
-    pattern = r"^\d+\.\d+\.\d+$"
+    """验证版本号格式（支持带 v 前缀）"""
+    pattern = r"^v?\d+\.\d+\.\d+$"
     return re.match(pattern, version) is not None
+
+
+def normalize_version(version):
+    """规范化版本号（去除 v 前缀）"""
+    if version.startswith('v'):
+        return version[1:]
+    return version
 
 
 def update_setup_iss_version(project_root, version):
@@ -346,6 +353,8 @@ def main():
         print("[错误] 版本号格式不正确，请使用 x.x.x 格式，例如：1.0.0")
         pause_if_interactive()
         sys.exit(1)
+
+    version = normalize_version(version)
 
     if args.all_platforms:
         platforms = ["windows", "android", "macos", "linux", "web", "installer"]

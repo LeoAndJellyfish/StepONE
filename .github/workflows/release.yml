@@ -17,11 +17,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Extract version
-        id: version
-        run: echo "VERSION=${{ github.ref_name }}" | sed 's/^v//' >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -48,15 +43,15 @@ jobs:
 
       - name: Package Windows
         working-directory: stepone
-        run: python scripts/package.py ${{ steps.version.outputs.VERSION }} --platforms=windows,installer
+        run: python scripts/package.py ${{ github.ref_name }} --platforms=windows,installer
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
           path: |
-            stepone/releases/v${{ steps.version.outputs.VERSION }}/*.zip
-            stepone/releases/v${{ steps.version.outputs.VERSION }}/*.exe
+            stepone/releases/${{ github.ref_name }}/*.zip
+            stepone/releases/${{ github.ref_name }}/*.exe
           retention-days: 1
 
   build-android:
@@ -64,10 +59,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Extract version
-        id: version
-        run: echo "VERSION=${{ github.ref_name }}" | sed 's/^v//' >> $GITHUB_OUTPUT
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -97,13 +88,13 @@ jobs:
 
       - name: Package Android
         working-directory: stepone
-        run: python scripts/package.py ${{ steps.version.outputs.VERSION }} --platforms=android
+        run: python scripts/package.py ${{ github.ref_name }} --platforms=android
 
       - name: Upload Android artifacts
         uses: actions/upload-artifact@v4
         with:
           name: android-build
-          path: stepone/releases/v${{ steps.version.outputs.VERSION }}/*.apk
+          path: stepone/releases/${{ github.ref_name }}/*.apk
           retention-days: 1
 
   create-release:

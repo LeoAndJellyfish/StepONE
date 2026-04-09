@@ -220,7 +220,7 @@ const HeroContent: React.FC = () => {
         记录每一步成长，汇聚每一份荣耀。系统化管理个人成就与荣誉记录。
       </p>
       <div className="flex gap-2 mt-2">
-        <span className="px-3 py-1 text-[10px] md:text-xs bg-white/60 dark:bg-white/10 text-gray-500 dark:text-gray-400 rounded-full">v1.0.3</span>
+        <span className="px-3 py-1 text-[10px] md:text-xs bg-white/60 dark:bg-white/10 text-gray-500 dark:text-gray-400 rounded-full">v1.0.4</span>
         <span className="px-3 py-1 text-[10px] md:text-xs bg-white/60 dark:bg-white/10 text-gray-500 dark:text-gray-400 rounded-full">Open Source</span>
       </div>
     </div>

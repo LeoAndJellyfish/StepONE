@@ -159,11 +159,78 @@ hooks:
 
 ## 📋 发布流程
 
+### 方式一：本地构建打包
+
 1. **更新版本号**：确定新版本号（如 `1.0.0`）
 2. **运行脚本**：`python build_and_package.py 1.0.0`
 3. **等待完成**：脚本自动完成构建和打包
 4. **验证文件**：检查 `releases/v1.0.0/` 目录下的文件
 5. **发布分享**：分享生成的 ZIP、APK 和安装程序
+
+### 方式二：GitHub Actions 自动化发布（推荐）
+
+#### 使用流程
+
+```bash
+# 1. 进入项目目录
+cd stepone
+
+# 2. 运行发布脚本
+python scripts/push.py 1.0.3
+
+# 3. 等待 GitHub Actions 自动构建并发布
+```
+
+#### push.py - 发布脚本
+
+**用法**: `python push.py [版本号]`
+
+**功能**:
+- 验证版本号格式 (x.x.x)
+- 检查标签是否已存在
+- 更新 `pubspec.yaml` 版本号
+- 更新 `website/App.tsx` 版本号
+- 创建 git commit
+- 创建 git tag (如 `v1.0.3`)
+- 推送 commit 和 tag 到远程仓库
+
+**示例**:
+```bash
+python scripts/push.py 1.0.3
+```
+
+#### GitHub Actions Workflow
+
+**触发条件**: 推送 `v*` 格式的标签
+
+**构建矩阵**:
+
+| Job | 平台 | 产物 |
+|-----|------|------|
+| `build-windows` | Windows | 便携版 ZIP + 安装程序 EXE |
+| `build-android` | Ubuntu | APK |
+
+**发布流程**:
+1. 构建 Windows 版本（便携版 + 安装程序）
+2. 构建 Android APK
+3. 创建 GitHub Release 并上传所有产物
+
+#### 首次使用配置
+
+需要将新文件提交到仓库：
+```bash
+git add .github/workflows/release.yml scripts/push.py
+git commit -m "feat: add release workflow"
+git push
+```
+
+#### 重新发布同一版本
+
+如果需要重新发布同一版本，先删除旧标签：
+```bash
+git tag -d v1.0.3
+git push origin --delete v1.0.3
+```
 
 ## 🗑️ 清理
 
@@ -230,10 +297,9 @@ android {
 
 - [ ] 自动版本号递增
 - [ ] 变更日志生成
-- [ ] CI/CD 集成
 - [ ] iOS/macOS/Linux 平台支持
 - [ ] Web 平台支持
 
 ---
 
-*版本管理架构 v1.0 - 2026 年 4 月 3 日*
+*版本管理架构 v2.0 - 2026 年 4 月 10 日*

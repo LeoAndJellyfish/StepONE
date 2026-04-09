@@ -71,19 +71,19 @@ hooks:
 flutter_launcher_icons:
   android: "ic_launcher"
   ios: true
-  image_path: "assets/images/AZvJt.png"
+  image_path: "assets/images/Gfavicon.png"
   adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/images/AZvJt.png"
+  adaptive_icon_foreground: "assets/images/Gfavicon.png"
   min_sdk_android: 21
   windows:
     generate: true
-    image_path: "assets/images/AZvJt.png"
+    image_path: "assets/images/Gfavicon.png"
     icon_size: 48
   macos:
     generate: true
-    image_path: "assets/images/AZvJt.png"
+    image_path: "assets/images/Gfavicon.png"
   web:
     generate: true
-    image_path: "assets/images/AZvJt.png"
+    image_path: "assets/images/Gfavicon.png"
     background_color: "#ffffff"
     theme_color: "#4A90E2"

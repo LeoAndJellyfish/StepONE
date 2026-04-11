@@ -6,10 +6,7 @@ class ResumeService {
   final String baseUrl;
   final String? apiKey;
 
-  ResumeService({
-    this.baseUrl = 'https://rxresu.me',
-    this.apiKey,
-  });
+  ResumeService({this.baseUrl = 'https://rxresu.me', this.apiKey});
 
   Future<Map<String, dynamic>> generateResumeData(
     String userName,
@@ -17,12 +14,9 @@ class ResumeService {
     List<Achievement> achievements,
   ) async {
     final sections = _categorizeAchievements(achievements);
-    
+
     return {
-      'basics': {
-        'name': userName,
-        'email': userEmail,
-      },
+      'basics': {'name': userName, 'email': userEmail},
       'sections': sections,
     };
   }
@@ -35,17 +29,17 @@ class ResumeService {
     final volunteer = <Map<String, dynamic>>[];
 
     for (final achievement in achievements) {
-      switch (achievement.achievementType) {
-        case 'award':
+      switch (achievement.categoryId) {
+        case 1:
           awards.add({
             'title': achievement.title,
             'date': achievement.achievementDate.toIso8601String(),
-            'award': achievement.awardLevel ?? '',
+            'award': achievement.remarks ?? '',
             'summary': achievement.description,
             'url': '',
           });
           break;
-        case 'project':
+        case 3:
           projects.add({
             'name': achievement.title,
             'description': achievement.description,
@@ -53,7 +47,7 @@ class ResumeService {
             'url': '',
           });
           break;
-        case 'certificate':
+        case 5:
           certificates.add({
             'name': achievement.title,
             'date': achievement.achievementDate.toIso8601String(),
@@ -61,7 +55,7 @@ class ResumeService {
             'url': '',
           });
           break;
-        case 'paper':
+        case 4:
           publications.add({
             'name': achievement.title,
             'publisher': achievement.organization ?? '',
@@ -69,7 +63,7 @@ class ResumeService {
             'url': '',
           });
           break;
-        case 'practice':
+        case 6:
           volunteer.add({
             'organization': achievement.organization ?? '',
             'position': achievement.title,
@@ -82,21 +76,11 @@ class ResumeService {
     }
 
     return {
-      'awards': {
-        'items': awards,
-      },
-      'projects': {
-        'items': projects,
-      },
-      'certifications': {
-        'items': certificates,
-      },
-      'publications': {
-        'items': publications,
-      },
-      'volunteer': {
-        'items': volunteer,
-      },
+      'awards': {'items': awards},
+      'projects': {'items': projects},
+      'certifications': {'items': certificates},
+      'publications': {'items': publications},
+      'volunteer': {'items': volunteer},
     };
   }
 
@@ -117,7 +101,7 @@ class ResumeService {
         final data = jsonDecode(response.body);
         return data['id'] as String?;
       }
-      
+
       return null;
     } catch (e) {
       print('Error exporting to Reactive Resume: $e');
@@ -130,7 +114,11 @@ class ResumeService {
     String userEmail,
     List<Achievement> achievements,
   ) async {
-    final resumeData = await generateResumeData(userName, userEmail, achievements);
+    final resumeData = await generateResumeData(
+      userName,
+      userEmail,
+      achievements,
+    );
     return const JsonEncoder.withIndent('  ').convert(resumeData);
   }
 }

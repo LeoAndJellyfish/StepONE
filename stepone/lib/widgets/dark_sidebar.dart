@@ -64,11 +64,11 @@ class DarkSidebar extends StatelessWidget {
       width: 38,
       height: 38,
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [AppTheme.primaryColor.withValues(alpha: 0.8), AppTheme.accentColor.withValues(alpha: 0.6)]),
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [BoxShadow(color: AppTheme.primaryColor.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 3))],
       ),
-      child: const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
+      clipBehavior: Clip.antiAlias,
+      child: Image.asset('assets/images/Gfavicon.png', fit: BoxFit.cover),
     );
 
     if (showExpanded) {

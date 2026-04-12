@@ -424,7 +424,7 @@ const DownloadSection = React.forwardRef<HTMLElement>((_, ref) => {
           className="mt-12 md:mt-16 text-gray-500 dark:text-gray-500 text-xs md:text-sm"
         >
           <p>Made with ❤️ by Leo & Jellyfish</p>
-          <p className="mt-1 md:mt-2">© 2026 StepONE · MIT License</p>
+          <p className="mt-1 md:mt-2">© 2026 StepONE · 仅供学习与个人用途</p>
         </motion.div>
       </div>
     </section>

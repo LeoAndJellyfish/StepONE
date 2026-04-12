@@ -104,7 +104,7 @@ class ResumeService {
 
       return null;
     } catch (e) {
-      print('Error exporting to Reactive Resume: $e');
+      // Error exporting to Reactive Resume
       return null;
     }
   }

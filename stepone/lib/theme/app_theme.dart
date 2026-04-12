@@ -151,21 +151,21 @@ class AppTheme {
 
   static BoxDecoration get glassmorphismDecoration {
     return BoxDecoration(
-      color: Colors.white.withOpacity(0.85),
+      color: Colors.white.withValues(alpha: 0.85),
       borderRadius: BorderRadius.circular(20),
       border: Border.all(
-        color: Colors.white.withOpacity(0.4),
+        color: Colors.white.withValues(alpha: 0.4),
         width: 1.5,
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.08),
+          color: Colors.black.withValues(alpha: 0.08),
           blurRadius: 30,
           offset: const Offset(0, 8),
           spreadRadius: -5,
         ),
         BoxShadow(
-          color: Colors.black.withOpacity(0.04),
+          color: Colors.black.withValues(alpha: 0.04),
           blurRadius: 10,
           offset: const Offset(0, 2),
         ),
@@ -175,15 +175,15 @@ class AppTheme {
 
   static BoxDecoration get glassmorphismCardDecoration {
     return BoxDecoration(
-      color: Colors.white.withOpacity(0.75),
+      color: Colors.white.withValues(alpha: 0.75),
       borderRadius: BorderRadius.circular(20),
       border: Border.all(
-        color: Colors.white.withOpacity(0.3),
+        color: Colors.white.withValues(alpha: 0.3),
         width: 1,
       ),
       boxShadow: [
         BoxShadow(
-          color: const Color(0xFF6B9FE8).withOpacity(0.1),
+          color: const Color(0xFF6B9FE8).withValues(alpha: 0.1),
           blurRadius: 20,
           offset: const Offset(0, 4),
         ),
@@ -197,9 +197,9 @@ class AppTheme {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          softPastelGradients[0].withOpacity(0.5),
-          softPastelGradients[1].withOpacity(0.4),
-          softPastelGradients[2].withOpacity(0.3),
+          softPastelGradients[0].withValues(alpha: 0.5),
+          softPastelGradients[1].withValues(alpha: 0.4),
+          softPastelGradients[2].withValues(alpha: 0.3),
         ],
       ),
       borderRadius: BorderRadius.circular(20),
@@ -212,9 +212,9 @@ class AppTheme {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          const Color(0xFFE8F4FF).withOpacity(0.6),
-          const Color(0xFFFFF5E6).withOpacity(0.4),
-          const Color(0xFFF8F9FA).withOpacity(0.3),
+          const Color(0xFFE8F4FF).withValues(alpha: 0.6),
+          const Color(0xFFFFF5E6).withValues(alpha: 0.4),
+          const Color(0xFFF8F9FA).withValues(alpha: 0.3),
         ],
       ),
     );
@@ -222,23 +222,23 @@ class AppTheme {
 
   static BoxDecoration categoryCardDecoration(Color color) {
     return BoxDecoration(
-      color: Colors.white.withOpacity(0.8),
+      color: Colors.white.withValues(alpha: 0.8),
       borderRadius: BorderRadius.circular(20),
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.white.withOpacity(0.9),
-          color.withOpacity(0.15),
+          Colors.white.withValues(alpha: 0.9),
+          color.withValues(alpha: 0.15),
         ],
       ),
       border: Border.all(
-        color: color.withOpacity(0.3),
+        color: color.withValues(alpha: 0.3),
         width: 1.2,
       ),
       boxShadow: [
         BoxShadow(
-          color: color.withOpacity(0.15),
+          color: color.withValues(alpha: 0.15),
           blurRadius: 16,
           offset: const Offset(0, 4),
         ),
@@ -248,10 +248,10 @@ class AppTheme {
 
   static BoxDecoration get darkGlassCardDecoration {
     return BoxDecoration(
-      color: Colors.white.withOpacity(0.08),
+      color: Colors.white.withValues(alpha: 0.08),
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         width: 0.8,
       ),
     );
@@ -259,15 +259,15 @@ class AppTheme {
 
   static BoxDecoration get darkPanelDecoration {
     return BoxDecoration(
-      color: Colors.black.withOpacity(0.45),
+      color: Colors.black.withValues(alpha: 0.45),
       borderRadius: BorderRadius.circular(24),
       border: Border.all(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         width: 1,
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.35),
+          color: Colors.black.withValues(alpha: 0.35),
           blurRadius: 30,
           offset: const Offset(0, 10),
         ),

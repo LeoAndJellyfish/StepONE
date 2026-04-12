@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'dart:ui';
+import 'package:intl/intl.dart';
 import '../models/achievement.dart';
 import '../models/category.dart';
 import '../models/tag.dart';
@@ -13,6 +13,37 @@ class AchievementFormPage extends StatefulWidget {
   final Achievement? achievement;
 
   const AchievementFormPage({super.key, this.achievement});
+
+  static Future<void> navigate(BuildContext context, {Achievement? achievement}) {
+    return Navigator.push(
+      context,
+      PageRouteBuilder(
+        opaque: false,
+        transitionDuration: const Duration(milliseconds: 250),
+        reverseTransitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (context, animation, secondaryAnimation) => AchievementFormPage(achievement: achievement),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return AnimatedBuilder(
+            animation: animation,
+            builder: (context, _) {
+              return GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Stack(
+                  children: [
+                    BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12 * animation.value, sigmaY: 12 * animation.value),
+                      child: Container(color: Colors.black.withValues(alpha: 0.4 * animation.value)),
+                    ),
+                    FadeTransition(opacity: animation, child: child),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
 
   @override
   State<AchievementFormPage> createState() => _AchievementFormPageState();
@@ -146,16 +177,20 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
       
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_isEditing ? '成就已更新' : '成就已创建'),
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(_isEditing ? '成就已更新' : '成就已创建'),
+            ),
+          );
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('保存失败：$e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('保存失败：$e')),
+        );
+      }
     }
   }
 
@@ -187,14 +222,18 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
         
         if (mounted) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('成就已删除')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('成就已删除')),
+            );
+          }
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('删除失败：$e')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('删除失败：$e')),
+          );
+        }
       }
     }
   }
@@ -248,73 +287,39 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // 背景图片
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/zzSQs.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
-          // 第一层毛玻璃效果（轻微模糊）
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.15),
-                      Colors.black.withOpacity(0.25),
-                      Colors.black.withOpacity(0.4),
-                    ],
-                    stops: const [0.0, 0.5, 1.0],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // 第二层毛玻璃效果（极轻微模糊，增强层次感）
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-              child: Container(
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ),
-          ),
-          // 内容区域
-          SafeArea(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator(color: Colors.white70))
-                : CustomScrollView(
-                    slivers: [
-                      // 标题栏
-                      SliverAppBar(
-                        floating: true,
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                        title: Text(
-                          _isEditing ? '编辑成就' : '新建成就',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        actions: [
-                          if (_isEditing)
-                            TextButton(
-                              onPressed: _deleteAchievement,
-                              style: TextButton.styleFrom(foregroundColor: Colors.red),
-                              child: const Text('删除'),
-                            ),
-                          TextButton(
-                            onPressed: _saveAchievement,
-                            style: TextButton.styleFrom(foregroundColor: Colors.white),
-                            child: const Text('保存'),
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator(color: Colors.white70))
+            : RepaintBoundary(
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverAppBar(
+                          floating: true,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          leading: IconButton(
+                            icon: Icon(Icons.close_rounded, color: Colors.white.withValues(alpha: 0.85)),
+                            onPressed: () => Navigator.pop(context),
                           ),
-                        ],
-                      ),
+                          title: Text(
+                            _isEditing ? '编辑成就' : '新建成就',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          actions: [
+                            if (_isEditing)
+                              TextButton(
+                                onPressed: _deleteAchievement,
+                                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                child: const Text('删除'),
+                              ),
+                            TextButton(
+                              onPressed: _saveAchievement,
+                              style: TextButton.styleFrom(foregroundColor: Colors.white),
+                              child: const Text('保存'),
+                            ),
+                          ],
+                        ),
                       // 表单内容
                       SliverPadding(
                         padding: const EdgeInsets.all(16),
@@ -355,7 +360,7 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
                                     title: Text(
                                       '获得日期',
                                       style: TextStyle(
-                                        color: Colors.white.withOpacity(0.7),
+                                        color: Colors.white.withValues(alpha: 0.7),
                                         fontSize: 13,
                                       ),
                                     ),
@@ -364,7 +369,7 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
                                       child: Text(
                                         DateFormat('yyyy 年 M 月 d 日').format(_achievementDate),
                                         style: TextStyle(
-                                          color: Colors.white.withOpacity(0.9),
+                                          color: Colors.white.withValues(alpha: 0.9),
                                           fontSize: 15,
                                         ),
                                       ),
@@ -388,14 +393,14 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
                                     title: Text(
                                       '团队成就',
                                       style: TextStyle(
-                                        color: Colors.white.withOpacity(0.9),
+                                        color: Colors.white.withValues(alpha: 0.9),
                                         fontSize: 14,
                                       ),
                                     ),
                                     subtitle: Text(
                                       '是否为团队参与的成就',
                                       style: TextStyle(
-                                        color: Colors.white.withOpacity(0.5),
+                                        color: Colors.white.withValues(alpha: 0.5),
                                         fontSize: 12,
                                       ),
                                     ),
@@ -403,7 +408,7 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
                                     onChanged: (value) {
                                       setState(() => _isCollective = value);
                                     },
-                                    activeColor: AppTheme.primaryColor,
+                                    activeThumbColor: AppTheme.primaryColor,
                                   ),
                                   if (_isCollective) ...[
                                     const SizedBox(height: 8),
@@ -411,14 +416,14 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
                                       title: Text(
                                         '我是负责人',
                                         style: TextStyle(
-                                          color: Colors.white.withOpacity(0.9),
+                                          color: Colors.white.withValues(alpha: 0.9),
                                           fontSize: 14,
                                         ),
                                       ),
                                       subtitle: Text(
                                         '是否为团队负责人',
                                         style: TextStyle(
-                                          color: Colors.white.withOpacity(0.5),
+                                          color: Colors.white.withValues(alpha: 0.5),
                                           fontSize: 12,
                                         ),
                                       ),
@@ -426,29 +431,29 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
                                       onChanged: (value) {
                                         setState(() => _isLeader = value);
                                       },
-                                      activeColor: AppTheme.primaryColor,
+                                      activeThumbColor: AppTheme.primaryColor,
                                     ),
                                     const SizedBox(height: 12),
                                     DropdownButtonFormField<int>(
-                                      value: _participantCount,
+                                      initialValue: _participantCount,
                                       decoration: InputDecoration(
                                         labelText: '参与人数',
-                                        labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-                                        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                                        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                                        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(12),
-                                          borderSide: BorderSide(color: Colors.white.withOpacity(0.2)),
+                                          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(12),
-                                          borderSide: BorderSide(color: Colors.white.withOpacity(0.2)),
+                                          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(12),
                                           borderSide: const BorderSide(color: Colors.white, width: 1.5),
                                         ),
                                         filled: true,
-                                        fillColor: Colors.white.withOpacity(0.08),
+                                        fillColor: Colors.white.withValues(alpha: 0.08),
                                       ),
                                       dropdownColor: Colors.black87,
                                       items: [
@@ -487,51 +492,44 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
                       ),
                     ],
                   ),
+                ),
           ),
-        ],
-      ),
     );
   }
 
   Widget _buildSectionCard(String title, List<Widget> children) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.15),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.95),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.3,
-                ),
-              ),
-              const SizedBox(height: 12),
-              ...children,
-            ],
-          ),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.12),
+          width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.95),
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...children,
+        ],
       ),
     );
   }
@@ -551,15 +549,15 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.25)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.25)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -574,32 +572,32 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
           borderSide: const BorderSide(color: Colors.red, width: 1.5),
         ),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.12),
+        fillColor: Colors.white.withValues(alpha: 0.12),
       ),
     );
   }
 
   Widget _buildCategorySelector() {
     return DropdownButtonFormField<Category>(
-      value: _selectedCategory,
+      initialValue: _selectedCategory,
       decoration: InputDecoration(
         labelText: '成就分类 *',
-        labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.25)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.25)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.white, width: 1.5),
         ),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.12),
+        fillColor: Colors.white.withValues(alpha: 0.12),
       ),
       dropdownColor: Colors.black87,
       items: _categories.map((category) {
@@ -630,15 +628,15 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
+              color: Colors.white.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(0.3)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [
                 Text(
                   '标签',
-                  style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
                 ),
                 const Spacer(),
                 const Icon(Icons.add_circle_outline, color: Colors.white70, size: 20),
@@ -654,10 +652,10 @@ class _AchievementFormPageState extends State<AchievementFormPage> {
             children: _selectedTags.map((tag) {
               return Chip(
                 label: Text(tag.name, style: const TextStyle(color: Colors.white, fontSize: 12)),
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
-                  side: BorderSide(color: Colors.white.withOpacity(0.3)),
+                  side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
                 ),
                 onDeleted: () {
                   setState(() {
@@ -733,11 +731,14 @@ class _TagSelectorSheetState extends State<_TagSelectorSheet> {
     widget.onTagCreated?.call();
     
     _newTagController.clear();
-    Navigator.pop(context);
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('标签 "$tagName" 已创建并选中')),
-    );
+    if (mounted) {
+      Navigator.pop(context);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('标签 "$tagName" 已创建并选中')),
+        );
+      }
+    }
   }
 
   Future<void> _deleteTag(Tag tag) async {
@@ -769,9 +770,11 @@ class _TagSelectorSheetState extends State<_TagSelectorSheet> {
       widget.onTagsSelected(_tempSelectedTags);
       widget.onTagCreated?.call();
       
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('标签 "${tag.name}" 已删除')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('标签 "${tag.name}" 已删除')),
+        );
+      }
     }
   }
 

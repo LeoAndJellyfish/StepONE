@@ -89,10 +89,10 @@ class AchievementCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.15),
+                  color: (categoryColor ?? AppTheme.primaryColor).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.3),
+                    color: (categoryColor ?? AppTheme.primaryColor).withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -173,10 +173,10 @@ class CategoryCard extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: color.withOpacity(0.3),
+                color: color.withValues(alpha: 0.3),
                 width: 1.2,
               ),
             ),
@@ -259,10 +259,10 @@ class EmptyState extends StatelessWidget {
               width: 90,
               height: 90,
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withOpacity(0.1),
+                color: AppTheme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
-                  color: AppTheme.primaryColor.withOpacity(0.2),
+                  color: AppTheme.primaryColor.withValues(alpha: 0.2),
                   width: 1.5,
                 ),
               ),
@@ -329,10 +329,10 @@ class DarkGlassCard extends StatelessWidget {
         child: Container(
           padding: padding ?? const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.08),
+            color: Colors.white.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               width: 0.8,
             ),
           ),
@@ -371,10 +371,10 @@ class DarkAchievementCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.07),
+            color: Colors.white.withValues(alpha: 0.07),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withOpacity(0.08),
+              color: Colors.white.withValues(alpha: 0.08),
               width: 0.8,
             ),
           ),
@@ -384,13 +384,13 @@ class DarkAchievementCard extends StatelessWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.2),
+                  color: (categoryColor ?? AppTheme.primaryColor).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.emoji_events_outlined,
                   size: 20,
-                  color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.8),
+                  color: (categoryColor ?? AppTheme.primaryColor).withValues(alpha: 0.8),
                 ),
               ),
               const SizedBox(width: 12),
@@ -403,7 +403,7 @@ class DarkAchievementCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white.withOpacity(0.92),
+                        color: Colors.white.withValues(alpha: 0.92),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -413,7 +413,7 @@ class DarkAchievementCard extends StatelessWidget {
                       description,
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -427,14 +427,14 @@ class DarkAchievementCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.15),
+                      color: (categoryColor ?? AppTheme.primaryColor).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       category,
                       style: TextStyle(
                         fontSize: 10,
-                        color: (categoryColor ?? AppTheme.primaryColor).withOpacity(0.85),
+                        color: (categoryColor ?? AppTheme.primaryColor).withValues(alpha: 0.85),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -444,7 +444,7 @@ class DarkAchievementCard extends StatelessWidget {
                     '${date.month}/${date.day}',
                     style: TextStyle(
                       fontSize: 10,
-                      color: Colors.white.withOpacity(0.35),
+                      color: Colors.white.withValues(alpha: 0.35),
                     ),
                   ),
                 ],
@@ -480,16 +480,16 @@ class DarkCategoryCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.white.withOpacity(0.06),
+          color: isSelected ? color.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.06),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? color.withOpacity(0.6) : Colors.white.withOpacity(0.08),
+            color: isSelected ? color.withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.08),
             width: isSelected ? 1.5 : 0.8,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: color.withOpacity(0.3),
+                    color: color.withValues(alpha: 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -503,13 +503,13 @@ class DarkCategoryCard extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: isSelected ? color.withOpacity(0.3) : color.withOpacity(0.2),
+                color: isSelected ? color.withValues(alpha: 0.3) : color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 _getIconData(icon),
                 size: isSelected ? 24 : 20,
-                color: isSelected ? Colors.white : color.withOpacity(0.85),
+                color: isSelected ? Colors.white : color.withValues(alpha: 0.85),
               ),
             ),
             const SizedBox(height: 8),
@@ -518,7 +518,7 @@ class DarkCategoryCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                color: isSelected ? Colors.white : Colors.white.withOpacity(0.85),
+                color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.85),
               ),
               textAlign: TextAlign.center,
               maxLines: 1,
@@ -584,7 +584,7 @@ class DarkEmptyState extends StatelessWidget {
             Icon(
               Icons.inbox_outlined,
               size: 36,
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 12),
             Text(
@@ -592,7 +592,7 @@ class DarkEmptyState extends StatelessWidget {
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
               ),
             ),
             if (subtitle != null) ...[
@@ -601,7 +601,7 @@ class DarkEmptyState extends StatelessWidget {
                 subtitle!,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.white.withOpacity(0.35),
+                  color: Colors.white.withValues(alpha: 0.35),
                 ),
                 textAlign: TextAlign.center,
               ),

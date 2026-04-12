@@ -268,7 +268,7 @@ class _AchievementListPageState extends State<AchievementListPage> {
             child: FilterChip(
               label: Text(category.name),
               selected: _selectedCategory?.id == category.id,
-              selectedColor: _parseColor(category.color).withOpacity(0.2),
+              selectedColor: _parseColor(category.color).withValues(alpha: 0.2),
               checkmarkColor: _parseColor(category.color),
               onSelected: (selected) {
                 setState(() => _selectedCategory = selected ? category : null);

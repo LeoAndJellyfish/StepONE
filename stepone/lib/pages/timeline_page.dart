@@ -24,7 +24,7 @@ class _TimelinePageState extends State<TimelinePage> {
   List<Achievement> _getTimelineAchievements() {
     final sorted = List<Achievement>.from(widget.achievements);
     sorted.sort((a, b) => b.achievementDate.compareTo(a.achievementDate));
-    return sorted.take(8).toList();
+    return sorted;
   }
 
   Color _getCategoryColor(int categoryId) {

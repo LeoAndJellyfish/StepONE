@@ -269,7 +269,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
     if (_filteredAchievements.isEmpty) {
       return Padding(padding: const EdgeInsets.symmetric(vertical: 24), child: DarkEmptyState(title: _searchController.text.isNotEmpty ? '没有找到匹配的成就' : '还没有成就', subtitle: _searchController.text.isNotEmpty ? '尝试其他搜索条件或清除搜索' : '点击右下角按钮添加你的第一个成就', action: _searchController.text.isNotEmpty ? TextButton(onPressed: () { _searchController.clear(); _onFilterChanged('全部'); }, child: const Text('清除搜索')) : null));
     }
-    return ListView.builder(shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), padding: const EdgeInsets.fromLTRB(16, 8, 16, 16), itemCount: _filteredAchievements.length, itemBuilder: (context, index) {
+    return ListView.builder(padding: const EdgeInsets.fromLTRB(16, 8, 16, 16), itemCount: _filteredAchievements.length, itemBuilder: (context, index) {
       final achievement = _filteredAchievements[index];
       return Padding(padding: const EdgeInsets.only(bottom: 8), child: DarkAchievementCard(title: achievement.title, description: achievement.description, category: _getCategoryName(achievement.categoryId), date: achievement.achievementDate, categoryColor: _getCategoryColor(achievement.categoryId), onTap: () => _navigateToEditAchievement(achievement)));
     });

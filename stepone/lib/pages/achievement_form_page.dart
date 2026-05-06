@@ -26,17 +26,14 @@ class AchievementFormPage extends StatefulWidget {
           return AnimatedBuilder(
             animation: animation,
             builder: (context, _) {
-              return GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Stack(
-                  children: [
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 12 * animation.value, sigmaY: 12 * animation.value),
-                      child: Container(color: Colors.black.withValues(alpha: 0.4 * animation.value)),
-                    ),
-                    FadeTransition(opacity: animation, child: child),
-                  ],
-                ),
+              return Stack(
+                children: [
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 12 * animation.value, sigmaY: 12 * animation.value),
+                    child: Container(color: Colors.black.withValues(alpha: 0.4 * animation.value)),
+                  ),
+                  FadeTransition(opacity: animation, child: child),
+                ],
               );
             },
           );
